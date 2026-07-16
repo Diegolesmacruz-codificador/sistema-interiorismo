@@ -1,5 +1,6 @@
 package com.dlinteriorismo.sistema_interiorismo.service;
 
+import com.dlinteriorismo.sistema_interiorismo.dto.EmpleadoRequest;
 import com.dlinteriorismo.sistema_interiorismo.model.Empleado;
 import com.dlinteriorismo.sistema_interiorismo.repository.EmpleadoRepository;
 import com.google.common.base.Strings;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class EmpleadoService {
+public class    EmpleadoService {
 
     private static final Logger logger =
             LoggerFactory.getLogger(EmpleadoService.class);
@@ -29,7 +30,14 @@ public class EmpleadoService {
         return empleadoRepository.findAll();
     }
 
-    public Empleado guardar(Empleado empleado) {
+    public Empleado guardar(EmpleadoRequest request) {
+
+        Empleado empleado = new Empleado();
+
+        empleado.setNombre(request.getNombre());
+        empleado.setCargo(request.getCargo());
+        empleado.setTelefono(request.getTelefono());
+        empleado.setCorreo(request.getCorreo());
 
         var camposObligatorios = ImmutableList.of("nombre", "cargo", "telefono");
         logger.info("Validando campos obligatorios de empleado: {}", camposObligatorios);
@@ -44,23 +52,31 @@ public class EmpleadoService {
             throw new RuntimeException("El cargo es obligatorio");
         }
 
-        if (StringUtils.isBlank(empleado.getTelefono()) ||
-                empleado.getTelefono().length() != 9 ||
-                !StringUtils.isNumeric(empleado.getTelefono())) {
+        if (StringUtils.isBlank(empleado.getTelefono())
+                || empleado.getTelefono().length() != 9
+                || !StringUtils.isNumeric(empleado.getTelefono())) {
+
             logger.warn("Teléfono inválido: {}", empleado.getTelefono());
             throw new RuntimeException("El teléfono debe tener exactamente 9 dígitos");
         }
 
-        if (StringUtils.isNotBlank(empleado.getCorreo()) &&
-                !EmailValidator.getInstance().isValid(empleado.getCorreo())) {
-            logger.warn("Correo inválido: {}", empleado.getCorreo());
-            throw new RuntimeException("Correo inválido");
+        if (StringUtils.isNotBlank(empleado.getCorreo())) {
+
+            if (!EmailValidator.getInstance().isValid(empleado.getCorreo())) {
+                logger.warn("Correo inválido: {}", empleado.getCorreo());
+                throw new RuntimeException("Formato de correo inválido");
+            }
+
+            if (!empleado.getCorreo().toLowerCase().endsWith("@gmail.com")) {
+                logger.warn("Correo no permitido: {}", empleado.getCorreo());
+                throw new RuntimeException("El correo debe terminar en @gmail.com");
+            }
         }
 
         logger.info("Empleado registrado correctamente: {}", empleado.getNombre());
+
         return empleadoRepository.save(empleado);
     }
-
     public void eliminar(Integer id) {
         logger.info("Eliminando empleado con ID: {}", id);
         empleadoRepository.deleteById(id);

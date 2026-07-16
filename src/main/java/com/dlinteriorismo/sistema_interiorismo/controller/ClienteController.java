@@ -1,5 +1,6 @@
 package com.dlinteriorismo.sistema_interiorismo.controller;
 
+import com.dlinteriorismo.sistema_interiorismo.dto.ClienteRequest;
 import com.dlinteriorismo.sistema_interiorismo.model.Cliente;
 import com.dlinteriorismo.sistema_interiorismo.service.ClienteService;
 import org.springframework.web.bind.annotation.*;
@@ -8,7 +9,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/clientes")
-@CrossOrigin(origins = "*")
 public class ClienteController {
 
     private final ClienteService clienteService;
@@ -23,8 +23,8 @@ public class ClienteController {
     }
 
     @PostMapping
-    public Cliente guardar(@RequestBody Cliente cliente) {
-        return clienteService.guardar(cliente);
+    public Cliente guardar(@RequestBody ClienteRequest request) {
+        return clienteService.guardar(request);
     }
 
     @DeleteMapping("/{id}")

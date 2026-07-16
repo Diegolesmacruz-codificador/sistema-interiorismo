@@ -6,6 +6,7 @@ import com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import com.dlinteriorismo.sistema_interiorismo.dto.CotizacionRequest;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -28,11 +29,20 @@ public class CotizacionService {
         return cotizacionRepository.findAll();
     }
 
-    public Cotizacion guardar(Cotizacion cotizacion) {
+    public Cotizacion guardar(CotizacionRequest request) {
+
+        Cotizacion cotizacion = new Cotizacion();
+
+        cotizacion.setIdProyecto(request.getIdProyecto());
+        cotizacion.setIdUsuario(request.getIdUsuario());
+        cotizacion.setMetraje(request.getMetraje());
 
         Preconditions.checkNotNull(cotizacion.getIdProyecto(), "El proyecto es obligatorio");
         Preconditions.checkArgument(cotizacion.getMetraje() != null, "El metraje es obligatorio");
-        Preconditions.checkArgument(cotizacion.getMetraje().compareTo(BigDecimal.ZERO) > 0, "El metraje debe ser mayor a 0");
+        Preconditions.checkArgument(
+                cotizacion.getMetraje().compareTo(BigDecimal.ZERO) > 0,
+                "El metraje debe ser mayor a 0"
+        );
 
         BigDecimal metraje = cotizacion.getMetraje();
 

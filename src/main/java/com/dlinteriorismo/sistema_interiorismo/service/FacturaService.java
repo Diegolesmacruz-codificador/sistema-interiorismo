@@ -8,7 +8,7 @@ import com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
+import com.dlinteriorismo.sistema_interiorismo.dto.FacturaRequest;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -32,8 +32,16 @@ public class FacturaService {
         return facturaRepository.findAll();
     }
 
-    public Factura guardar(Factura factura) {
-        Preconditions.checkNotNull(factura.getIdCotizacion(), "La cotización es obligatoria");
+    public Factura guardar(FacturaRequest request) {
+
+        Factura factura = new Factura();
+
+        factura.setIdCotizacion(request.getIdCotizacion());
+        factura.setNumeroFactura(request.getNumeroFactura());
+        factura.setEstado(request.getEstado());
+
+        Preconditions.checkNotNull(factura.getIdCotizacion(),
+                "La cotización es obligatoria");
 
         Cotizacion cotizacion = cotizacionRepository.findById(factura.getIdCotizacion())
                 .orElseThrow(() -> new RuntimeException("Cotización no encontrada"));
@@ -50,6 +58,7 @@ public class FacturaService {
         }
 
         logger.info("Factura generada para cotización ID: {}", factura.getIdCotizacion());
+
         if (facturaRepository.existsByIdCotizacion(factura.getIdCotizacion())) {
             throw new RuntimeException("Esta cotización ya tiene una factura generada");
         }

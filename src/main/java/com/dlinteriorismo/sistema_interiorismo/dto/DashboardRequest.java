@@ -3,7 +3,7 @@ package com.dlinteriorismo.sistema_interiorismo.dto;
 import lombok.Data;
 
 @Data
-public class DashboardDTO {
+public class DashboardRequest {
 
     private Long totalProyectos;
     private Long totalCotizaciones;

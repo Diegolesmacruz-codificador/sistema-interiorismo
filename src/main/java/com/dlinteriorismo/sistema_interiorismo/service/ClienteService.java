@@ -1,20 +1,21 @@
 package com.dlinteriorismo.sistema_interiorismo.service;
+
+import com.dlinteriorismo.sistema_interiorismo.dto.ClienteRequest;
 import com.dlinteriorismo.sistema_interiorismo.model.Cliente;
 import com.dlinteriorismo.sistema_interiorismo.repository.ClienteRepository;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.routines.EmailValidator;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 @Service
 public class ClienteService {
+
     private static final Logger logger =
             LoggerFactory.getLogger(ClienteService.class);
 
@@ -28,7 +29,16 @@ public class ClienteService {
         return clienteRepository.findAll();
     }
 
-    public Cliente guardar(Cliente cliente) {
+    public Cliente guardar(ClienteRequest request) {
+
+        Cliente cliente = new Cliente();
+
+        cliente.setNombre(request.getNombre());
+        cliente.setDni(request.getDni());
+        cliente.setTelefono(request.getTelefono());
+        cliente.setCorreo(request.getCorreo());
+        cliente.setDireccion(request.getDireccion());
+
         var camposObligatorios = ImmutableList.of("nombre", "dni", "telefono");
         logger.info("Validando campos obligatorios: {}", camposObligatorios);
 
@@ -37,12 +47,16 @@ public class ClienteService {
             throw new RuntimeException("El nombre es obligatorio");
         }
 
-        if (StringUtils.isBlank(cliente.getDni()) || cliente.getDni().length() != 8 || !StringUtils.isNumeric(cliente.getDni())) {
+        if (StringUtils.isBlank(cliente.getDni())
+                || cliente.getDni().length() != 8
+                || !StringUtils.isNumeric(cliente.getDni())) {
             logger.warn("DNI inválido: {}", cliente.getDni());
             throw new RuntimeException("El DNI debe tener 8 dígitos");
         }
 
-        if (StringUtils.isBlank(cliente.getTelefono()) || cliente.getTelefono().length() != 9 || !StringUtils.isNumeric(cliente.getTelefono())) {
+        if (StringUtils.isBlank(cliente.getTelefono())
+                || cliente.getTelefono().length() != 9
+                || !StringUtils.isNumeric(cliente.getTelefono())) {
             logger.warn("Teléfono inválido: {}", cliente.getTelefono());
             throw new RuntimeException("El teléfono debe tener 9 dígitos");
         }
@@ -61,6 +75,7 @@ public class ClienteService {
         }
 
         logger.info("Cliente registrado correctamente: {}", cliente.getNombre());
+
         return clienteRepository.save(cliente);
     }
 

@@ -1,5 +1,6 @@
 package com.dlinteriorismo.sistema_interiorismo.controller;
 
+import com.dlinteriorismo.sistema_interiorismo.dto.PagoRequest;
 import com.dlinteriorismo.sistema_interiorismo.model.Pago;
 import com.dlinteriorismo.sistema_interiorismo.service.PagoService;
 import org.springframework.web.bind.annotation.*;
@@ -8,7 +9,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/pagos")
-@CrossOrigin(origins = "*")
 public class PagoController {
 
     private final PagoService pagoService;
@@ -23,8 +23,8 @@ public class PagoController {
     }
 
     @PostMapping
-    public Pago guardar(@RequestBody Pago pago) {
-        return pagoService.guardar(pago);
+    public Pago guardar(@RequestBody PagoRequest pagoRequest) {
+        return pagoService.guardar(pagoRequest);
     }
 
     @DeleteMapping("/{id}")

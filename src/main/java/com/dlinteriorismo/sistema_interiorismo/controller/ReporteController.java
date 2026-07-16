@@ -19,8 +19,15 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/reportes")
-@CrossOrigin(origins = "*")
 public class ReporteController {
+    private String generarNombreArchivo(String nombreArchivo) {
+        return "attachment; filename=" + nombreArchivo + ".xlsx";
+    }
+    private static final String EXCEL_CONTENT_TYPE =
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
+    private static final String CONTENT_DISPOSITION =
+            "Content-Disposition";
 
     private final ClienteRepository clienteRepository;
     private final EmpleadoRepository empleadoRepository;
@@ -51,8 +58,8 @@ public class ReporteController {
     @GetMapping("/clientes-excel")
     public void exportarClientesExcel(HttpServletResponse response) throws IOException {
 
-        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        response.setHeader("Content-Disposition", "attachment; filename=clientes.xlsx");
+        response.setContentType(EXCEL_CONTENT_TYPE);
+        response.setHeader(CONTENT_DISPOSITION, generarNombreArchivo("clientes"));
 
         List<Cliente> clientes = clienteRepository.findAll();
 
@@ -91,8 +98,8 @@ public class ReporteController {
     @GetMapping("/empleados-excel")
     public void exportarEmpleadosExcel(HttpServletResponse response) throws IOException {
 
-        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        response.setHeader("Content-Disposition", "attachment; filename=empleados.xlsx");
+        response.setContentType(EXCEL_CONTENT_TYPE);
+        response.setHeader(CONTENT_DISPOSITION, generarNombreArchivo("empleados"));
 
         List<Empleado> empleados = empleadoRepository.findAll();
 
@@ -129,8 +136,8 @@ public class ReporteController {
     @GetMapping("/proyectos-excel")
     public void exportarProyectosExcel(HttpServletResponse response) throws IOException {
 
-        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        response.setHeader("Content-Disposition", "attachment; filename=proyectos.xlsx");
+        response.setContentType(EXCEL_CONTENT_TYPE);
+        response.setHeader(CONTENT_DISPOSITION, generarNombreArchivo("proyectos"));
 
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Proyectos");
@@ -172,8 +179,8 @@ public class ReporteController {
     @GetMapping("/cotizaciones-excel")
     public void exportarCotizacionesExcel(HttpServletResponse response) throws IOException {
 
-        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        response.setHeader("Content-Disposition", "attachment; filename=cotizaciones.xlsx");
+        response.setContentType(EXCEL_CONTENT_TYPE);
+        response.setHeader(CONTENT_DISPOSITION, generarNombreArchivo("cotizaciones"));
 
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Cotizaciones");
@@ -217,8 +224,8 @@ public class ReporteController {
     @GetMapping("/facturas-excel")
     public void exportarFacturasExcel(HttpServletResponse response) throws IOException {
 
-        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        response.setHeader("Content-Disposition", "attachment; filename=facturas.xlsx");
+        response.setContentType(EXCEL_CONTENT_TYPE);
+        response.setHeader(CONTENT_DISPOSITION, generarNombreArchivo("facturas"));
 
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Facturas");
@@ -256,8 +263,8 @@ public class ReporteController {
     @GetMapping("/pagos-excel")
     public void exportarPagosExcel(HttpServletResponse response) throws IOException {
 
-        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        response.setHeader("Content-Disposition", "attachment; filename=pagos.xlsx");
+        response.setContentType(EXCEL_CONTENT_TYPE);
+        response.setHeader(CONTENT_DISPOSITION, generarNombreArchivo("pagos"));
 
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Pagos");
@@ -297,8 +304,8 @@ public class ReporteController {
     @GetMapping("/tareas-excel")
     public void exportarTareasExcel(HttpServletResponse response) throws IOException {
 
-        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        response.setHeader("Content-Disposition", "attachment; filename=tareas.xlsx");
+        response.setContentType(EXCEL_CONTENT_TYPE);
+        response.setHeader(CONTENT_DISPOSITION, generarNombreArchivo("tareas"));
 
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Tareas");

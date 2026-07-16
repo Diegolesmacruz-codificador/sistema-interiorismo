@@ -2,12 +2,12 @@ package com.dlinteriorismo.sistema_interiorismo.controller;
 import com.dlinteriorismo.sistema_interiorismo.model.Usuario;
 import com.dlinteriorismo.sistema_interiorismo.repository.UsuarioRepository;
 import org.springframework.web.bind.annotation.*;
+import com.dlinteriorismo.sistema_interiorismo.dto.LoginRequest;
 
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/login")
-@CrossOrigin(origins = "*")
 public class LoginController {
     private final UsuarioRepository usuarioRepository;
 
@@ -16,10 +16,11 @@ public class LoginController {
     }
 
     @PostMapping
-    public String login(@RequestBody Usuario usuario) {
+    public String login(@RequestBody LoginRequest request) {
+
         Optional<Usuario> encontrado = usuarioRepository.findByUsuarioAndPassword(
-                usuario.getUsuario(),
-                usuario.getPassword()
+                request.getUsuario(),
+                request.getPassword()
         );
 
         if (encontrado.isPresent()) {

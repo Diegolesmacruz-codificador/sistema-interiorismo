@@ -9,7 +9,7 @@ import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
+import com.dlinteriorismo.sistema_interiorismo.dto.TareaRequest;
 import java.util.List;
 
 @Service
@@ -36,22 +36,37 @@ public class TareaService {
         return tareaRepository.findAll();
     }
 
-    public Tarea guardar(Tarea tarea) {
-        Preconditions.checkNotNull(tarea.getIdProyecto(), "El proyecto es obligatorio");
-        Preconditions.checkArgument(proyectoRepository.existsById(tarea.getIdProyecto()), "El proyecto no existe");
+    public Tarea guardar(TareaRequest request) {
 
-        Preconditions.checkNotNull(tarea.getIdEmpleado(), "El empleado es obligatorio");
-        Preconditions.checkArgument(empleadoRepository.existsById(tarea.getIdEmpleado()), "El empleado no existe");
+        Preconditions.checkNotNull(request.getIdProyecto(), "El proyecto es obligatorio");
+        Preconditions.checkArgument(
+                proyectoRepository.existsById(request.getIdProyecto()),
+                "El proyecto no existe");
 
-        if (Strings.isNullOrEmpty(tarea.getDescripcion())) {
+        Preconditions.checkNotNull(request.getIdEmpleado(), "El empleado es obligatorio");
+        Preconditions.checkArgument(
+                empleadoRepository.existsById(request.getIdEmpleado()),
+                "El empleado no existe");
+
+        if (Strings.isNullOrEmpty(request.getDescripcion())) {
             throw new RuntimeException("La descripción es obligatoria");
         }
 
-        if (tarea.getEstado() == null || tarea.getEstado().isBlank()) {
+        Tarea tarea = new Tarea();
+
+        tarea.setIdProyecto(request.getIdProyecto());
+        tarea.setIdEmpleado(request.getIdEmpleado());
+        tarea.setDescripcion(request.getDescripcion());
+        tarea.setFechaLimite(request.getFechaLimite());
+
+        if (request.getEstado() == null || request.getEstado().isBlank()) {
             tarea.setEstado("Pendiente");
+        } else {
+            tarea.setEstado(request.getEstado());
         }
 
-        logger.info("Tarea registrada para proyecto ID: {}", tarea.getIdProyecto());
+        logger.info("Tarea registrada para proyecto ID: {}", request.getIdProyecto());
+
         return tareaRepository.save(tarea);
     }
 

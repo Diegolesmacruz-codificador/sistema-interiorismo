@@ -7,7 +7,7 @@ import com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
+import com.dlinteriorismo.sistema_interiorismo.dto.PagoRequest;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -31,15 +31,41 @@ public class PagoService {
         return pagoRepository.findAll();
     }
 
-    public Pago guardar(Pago pago) {
-        Preconditions.checkNotNull(pago.getIdFactura(), "La factura es obligatoria");
-        Preconditions.checkArgument(facturaRepository.existsById(pago.getIdFactura()), "La factura no existe");
-        Preconditions.checkArgument(pago.getMonto() != null, "El monto es obligatorio");
-        Preconditions.checkArgument(pago.getMonto().compareTo(BigDecimal.ZERO) > 0, "El monto debe ser mayor a 0");
+    public Pago guardar(PagoRequest pagoRequest) {
 
+        Preconditions.checkNotNull(
+                pagoRequest.getIdFactura(),
+                "La factura es obligatoria"
+        );
+
+        Preconditions.checkArgument(
+                facturaRepository.existsById(pagoRequest.getIdFactura()),
+                "La factura no existe"
+        );
+
+        Preconditions.checkArgument(
+                pagoRequest.getMonto() != null,
+                "El monto es obligatorio"
+        );
+
+        Preconditions.checkArgument(
+                pagoRequest.getMonto().compareTo(BigDecimal.ZERO) > 0,
+                "El monto debe ser mayor a 0"
+        );
+
+        Pago pago = new Pago();
+
+        pago.setIdFactura(pagoRequest.getIdFactura());
+        pago.setMetodoPago(pagoRequest.getMetodoPago());
+        pago.setMonto(pagoRequest.getMonto());
+        pago.setReferencia(pagoRequest.getReferencia());
         pago.setFechaPago(LocalDate.now());
 
-        logger.info("Pago registrado para factura ID: {}", pago.getIdFactura());
+        logger.info(
+                "Pago registrado para factura ID: {}",
+                pagoRequest.getIdFactura()
+        );
+
         return pagoRepository.save(pago);
     }
 

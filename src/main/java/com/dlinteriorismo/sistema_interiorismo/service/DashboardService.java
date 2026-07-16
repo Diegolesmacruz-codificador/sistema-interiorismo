@@ -1,6 +1,6 @@
 package com.dlinteriorismo.sistema_interiorismo.service;
 
-import com.dlinteriorismo.sistema_interiorismo.dto.DashboardDTO;
+import com.dlinteriorismo.sistema_interiorismo.dto.DashboardRequest;
 import com.dlinteriorismo.sistema_interiorismo.repository.*;
 import org.springframework.stereotype.Service;
 import com.dlinteriorismo.sistema_interiorismo.model.Proyecto;
@@ -31,9 +31,9 @@ public class DashboardService {
         this.tareaRepository = tareaRepository;
     }
 
-    public DashboardDTO obtenerResumen() {
+    public DashboardRequest obtenerResumen() {
 
-        DashboardDTO dto = new DashboardDTO();
+        DashboardRequest dto = new DashboardRequest();
 
         dto.setTotalProyectos(proyectoRepository.count());
         dto.setTotalCotizaciones(cotizacionRepository.count());

@@ -8,7 +8,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/tipos-proyecto")
-@CrossOrigin(origins = "*")
 public class TipoProyectoController {
 
     private final TipoProyectoRepository tipoProyectoRepository;
